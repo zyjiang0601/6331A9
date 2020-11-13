@@ -76,7 +76,7 @@ void autonomous(void) {
             Right_super();
             break;
         case 8:
-            Right_no_enemy_L();
+            //Right_no_enemy_L();
             break;
         default:
             //robot::time.auto_default_print();
@@ -172,7 +172,7 @@ int main() {
 
     static double time_to_choose = Brain.timer(vex::timeUnits::msec);
     while (1) {
-        if (Brain.timer(vex::timeUnits::msec) - time_to_choose > 150) {
+        if (Brain.timer(vex::timeUnits::msec) - time_to_choose > 175) {
             if (bumper_.pressing()) {
                 Brain.Screen.clearScreen();
                 choose = choose % 8 + 1;
@@ -182,12 +182,16 @@ int main() {
         }
         switch (choose) {
             case 0:
-                Brain.Screen.printAt(10, 80, "Automatic time period selection");
-                Brain.Screen.printAt(10, 100, "Use the Bumper to select the program");
-                Brain.Screen.printAt(68, 52, "<-----------");
-                Brain.Screen.drawRectangle(20, 28, 20, 35); 
+                Brain.Screen.printAt(10, 100, "Automatic time period selection");
+                Brain.Screen.printAt(10, 120, "Use the Bumper to select the program");
+                Brain.Screen.printAt(10, 140, "If you stay on this page, it will do nothing.");
+                Brain.Screen.setFont(propM); 
+                Brain.Screen.printAt(100, 55, "<");
+                Brain.Screen.printAt(113, 53, "--------Bumper--------");
+                Brain.Screen.setFont(monoM); 
+                Brain.Screen.drawRectangle(20, 14, 40, 65); 
                 Brain.Screen.setFillColor(red);
-                Brain.Screen.drawRectangle(39, 35, 18, 24); 
+                Brain.Screen.drawRectangle(59, 25, 28, 44); 
                 // Brain.Screen.drawLine(88, 35, 40, 3); 
                 break;
 
@@ -195,7 +199,7 @@ int main() {
             case 1:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 100, 20);
+                Brain.Screen.drawCircle(340, 50, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Left 1");
                 Brain.Screen.printAt(10, 80, "Goal in the corner");
@@ -204,7 +208,7 @@ int main() {
             case 2:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 100, 20);
+                Brain.Screen.drawCircle(340, 50, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Right 1");
                 Brain.Screen.printAt(10, 80, "Goal in the corner");
@@ -213,8 +217,8 @@ int main() {
             case 3:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 80, 20);
-                Brain.Screen.drawCircle(135, 80, 20);
+                Brain.Screen.drawCircle(340, 80, 20);
+                Brain.Screen.drawCircle(410, 80, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Left 1 and 2");
                 Brain.Screen.printAt(10, 80, "Corner and side");
@@ -223,8 +227,8 @@ int main() {
             case 4:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 80, 20);
-                Brain.Screen.drawCircle(135, 80, 20);
+                Brain.Screen.drawCircle(340, 80, 20);
+                Brain.Screen.drawCircle(410, 80, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Right 1 and 2");
                 Brain.Screen.printAt(10, 80, "Corner and side");
@@ -234,8 +238,8 @@ int main() {
             case 5:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 80, 20);
-                Brain.Screen.drawCircle(135, 135, 20);
+                Brain.Screen.drawCircle(340, 135, 20);
+                Brain.Screen.drawCircle(410, 80, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Left 1 and 3");
                 Brain.Screen.printAt(10, 80, "Corner and middle of field");
@@ -244,8 +248,8 @@ int main() {
             case 6:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 80, 20);
-                Brain.Screen.drawCircle(135, 135, 20);
+                Brain.Screen.drawCircle(340, 80, 20);
+                Brain.Screen.drawCircle(410, 135, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Right 1 and 3");
                 Brain.Screen.printAt(10, 80, "Corner and middle of field");
@@ -254,9 +258,9 @@ int main() {
             case 7:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(80, 80, 20);
-                Brain.Screen.drawCircle(135, 80, 20);
-                Brain.Screen.drawCircle(190, 80, 20);
+                Brain.Screen.drawCircle(260, 80, 20);
+                Brain.Screen.drawCircle(320, 80, 20);
+                Brain.Screen.drawCircle(380, 80, 20);
                 Brain.Screen.setFillColor(black);
                 Brain.Screen.printAt(10, 40, "Right \"Super!!!\" Must be placed on the right");
                 Brain.Screen.printAt(10, 80, "home alliance");
@@ -265,11 +269,14 @@ int main() {
             case 8:
                 // Brain.Screen.clearScreen();
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.drawRectangle(25, 25, 10, 35); 
-                Brain.Screen.drawRectangle(25, 60, 20, 10); 
+                Brain.Screen.drawRectangle(285, 25, 20, 65); 
+                Brain.Screen.drawRectangle(285, 85, 50, 25); 
                 Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Right NO ENEMY!!!");
+                Brain.Screen.printAt(10, 40, "Right NO ENEMY!!!(Case 8)");
                 Brain.Screen.printAt(10, 80, "Shape L");
+                Brain.Screen.printAt(5, 130, "This program has been checked by Jiang Ziyang ");
+                Brain.Screen.printAt(5, 150, "and found to be wrong and has been banned");
+
                 // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
                 break;
             default:
