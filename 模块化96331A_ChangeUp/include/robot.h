@@ -47,9 +47,7 @@ public:
 
 
 PID Left=PID(left_p,left_i,left_d);
-//PID Left2=PID(left_p,left_i,left_d);
 PID Right=PID(right_p,right_i,right_d);
-//PID Right2=PID(right_p,right_i,right_d);
 PID LeftRoller=PID(roll_p,roll_i,roll_d);
 PID RightRoller=PID(roll_p,roll_i,roll_d);
 PID Ball=PID(roll_p,roll_i,roll_d);
@@ -60,26 +58,20 @@ PID Shot=PID(shot_p,shot_i,shot_d);
 void data_update()
 {
     Left.data_in((DL1.velocity(percent)+DL2.velocity(percent))/2);
-    //Left2.data_in(DL2.velocity(percent));
     Right.data_in((DR1.velocity(percent)+DR2.velocity(percent))/2);
-    //Right2.data_in(DR2.velocity(percent));
     
 }
 void set_speed(double leftSpeed, double rightSpeed){
     Left.set_goal(leftSpeed);
-    //Left2.set_goal(leftSpeed);
     Right.set_goal(rightSpeed);
-    //Right2.set_goal(rightSpeed);
 }
 
 void moving()
 {
     DL1.spin(forward,Left.data_out(),pct);
     DL2.spin(forward,Left.data_out(),pct);
-    //DL2.spin(forward,Left2.data_out(),pct);
     DR1.spin(forward,Right.data_out(),pct);
     DR2.spin(forward,Right.data_out(),pct);
-    //DR2.spin(forward,Right2.data_out(),pct);
 }
 
 void move(double leftS, double rightS)
@@ -125,6 +117,49 @@ void shot_moving()
 }
 //---------------------------------------------
 //This is inside namespace PID
+class roll{
+public:
+    void up(){
+        roll_setspeed(100);
+        roll_dataupdate();
+        roll_moving();
+    }
+    void down(){
+        roll_setspeed(-100);
+        roll_dataupdate();
+        roll_moving();
+    }
+    void pause(){
+        roll_setspeed(0);
+        roll_dataupdate();
+        roll_moving();
+    }
+};
+roll roll;
+
+class shot{
+public:
+    void up(){
+        shot_setspeed(100);
+        shot_dataupdate();
+        shot_moving();
+    }
+    void down(){
+        shot_setspeed(-100);
+        shot_dataupdate();
+        shot_moving();
+    }
+    void pause(){
+        shot_setspeed(0);
+        shot_dataupdate();
+        shot_moving();
+    }
+};
+shot shot;
+
+
+//-------
+
 class up{
 public:
     
@@ -192,11 +227,59 @@ public:
 pause pause;
 
 
-}// namespace "PID"end------
+}// namespace "PID" end------
 
 //---------------------------------------------
 //This is outside namespace PID
 
+class Roll{
+public:
+    void up(){
+        LR.setVelocity(100,percent);
+        LR.spin(forward);
+        RR.setVelocity(100,percent);
+        RR.spin(reverse);
+        XQ.setVelocity(100,percent);
+        XQ.spin(forward);
+    }
+    void down(){
+        LR.setVelocity(100,percent);
+        LR.spin(reverse);
+        RR.setVelocity(100,percent);
+        RR.spin(forward);
+        XQ.setVelocity(100,percent);
+        XQ.spin(reverse);
+    }
+    void pause(){
+        LR.stop(hold);
+        LR.setStopping(brake);
+        RR.stop(hold);
+        RR.setStopping(brake);
+        XQ.setVelocity(0,percent);
+        XQ.spin(reverse);
+    }
+};
+Roll roll;
+
+class shot{
+public:
+    void up(){
+        S.setVelocity(100,percent);
+        S.spin(reverse);
+    }
+    void down(){
+        S.setVelocity(100,percent);
+        S.spin(forward);
+    }
+    void pause(){
+        S.stop(hold);
+        S.setStopping(brake);
+    }
+};
+shot shot;
+
+
+//--------
 
 class up{
 public:
@@ -309,70 +392,8 @@ void automove(double left,double right,double time,double left_speed,double righ
 }
 
 //---------------------------------------------
-namespace robottime{
-int time0;
-void set(){// can be only used once
-    time0=Brain.timer(vex::timeUnits::msec);
-}
 
 
-}
 
-//---------------------------------------------
-
-namespace robot{
-
-class time{
-private:
-    int timer0;
-    int initial_sec, user_hour, user_min, user_sec;
-    
-public:
-    class msec{// msec
-    public:
-        int get(){
-            int time=Brain.timer(vex::timeUnits::msec);
-            return time;
-        }
-    };
-    msec msec;
-    
-    
-    class sec{// sec
-    public:
-        int get(){
-            int time=Brain.timer(vex::timeUnits::sec);
-            return time;
-        }
-    };
-    sec sec;
-    
-    void setup(){ // can be only used once
-        
-        //        timer0=Brain.timer(vex::timeUnits::sec);
-        //        robottime::set();
-    }
-    
-    void report(){
-        
-        //        if((Brain.timer(vex::timeUnits::msec)-robottime::time0)>1000){
-        //            initial_sec=Brain.timer(vex::timeUnits::sec)-timer0;
-        //            user_hour=initial_sec/3600;
-        //            user_min=initial_sec%3600/60;
-        //            user_sec=initial_sec%60;
-        //            Controller1.Screen.print("Time: %d(h)%d(min)%d(s)\n",user_hour,user_min,user_sec);
-        //            robottime::time0=Brain.timer(vex::timeUnits::msec);
-        //    }
-    }
-    
-    
-    void auto_default_print(){
-        Controller1.Screen.print("If this text appears, there is a bug");
-    }
-    
-};
-time time;
-
-}
 
 

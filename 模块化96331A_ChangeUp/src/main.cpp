@@ -1,6 +1,3 @@
-//
-//自动优先右场
-
 // ---- START VEXCODE CONFIGURED DEVICES ----
 // Robot Configuration:
 // [Name]               [Type]        [Port(s)]
@@ -9,7 +6,7 @@
 // XQ                   motor         9               
 // LR                   motor         12              
 // DR1                  motor         15              
-// DR2                  motor         6               
+// DR2                  motor         21              
 // DL2                  motor         4               
 // RR                   motor         11              
 // S                    motor         7               
@@ -17,10 +14,11 @@
 // bumper_              bumper        A               
 // ---- END VEXCODE CONFIGURED DEVICES ----
 
-#include "vex.h"
 #include "Left.h"
 #include "Right.h"
 #include "robot.h"
+#include "screen.h"
+#include "vex.h"
 
 using namespace vex;
 
@@ -31,9 +29,8 @@ int choose = 0;
 //================//
 
 void pre_auton(void) {
-    // Initializing Robot Configuration. DO NOT REMOVE!
-    vexcodeInit();
-    
+  // Initializing Robot Configuration. DO NOT REMOVE!
+  vexcodeInit();
 }
 
 /*---------------------------------------------------------------------------*/
@@ -45,45 +42,41 @@ void pre_auton(void) {
 /*     field is No.3 goal.                          Ziyang Jiang             */
 /*---------------------------------------------------------------------------*/
 
-
-
 void autonomous(void) {
-    Brain.resetTimer();
+  Brain.resetTimer();
 
-    //choose = 4;
-    switch (choose) {
-        case 0:
-            break;
-        case 1:
-            Left1();
-            break;
-        case 2:
-            Right1();
-            break;
-        case 3:
-            Left1and2();
-            break;
-        case 4:
-            Right1and2();
-            break;
-        case 5:
-            Left1and3();
-            break;
-        case 6:
-            Right1and3();
-            break;
-        case 7:
-            Right_super();
-            break;
-        case 8:
-            //Right_no_enemy_L();
-            break;
-        default:
-            //robot::time.auto_default_print();
-            break;
-
-    }
-    
+  choose = 4;
+  switch (choose) {
+  case 0:
+    break;
+  case 1:
+    Left1();
+    break;
+  case 2:
+    Right1();
+    break;
+  case 3:
+    Left1and2();
+    break;
+  case 4:
+    Right1and2();
+    break;
+  case 5:
+    Left1and3();
+    break;
+  case 6:
+    Right1and3();
+    break;
+  case 7:
+    Right_threeGoals();
+    break;
+  case 8:
+    // Right_no_enemy_L();
+    break;
+  default:
+    // screen::time.autoDefaultPrint();
+    break;
+  }
 }
 
 /*---------------------------------------------------------------------------*/
@@ -96,73 +89,72 @@ void autonomous(void) {
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
 void usercontrol(void) {
-    // User control code here, inside the loop
-    //###
-    robot::time.setup();
-    //###
-    //Controller1.Screen.clearScreen();
-    //###
-    while (1) {
-        
-        wait(20, msec);
-        int C1, C2, C3, C4, X, Y, A, B, U, D, L, R, L1, L2, R1, R2;
-        
-        C1 = Controller1.Axis1.position(percent);
-        C2 = Controller1.Axis2.position(percent);
-        C3 = Controller1.Axis3.position(percent);
-        C4 = Controller1.Axis4.position(percent);
-        X = Controller1.ButtonX.pressing();
-        Y = Controller1.ButtonY.pressing();
-        A = Controller1.ButtonA.pressing();
-        B = Controller1.ButtonB.pressing();
-        U = Controller1.ButtonUp.pressing();
-        D = Controller1.ButtonDown.pressing();
-        R = Controller1.ButtonRight.pressing();
-        L = Controller1.ButtonLeft.pressing();
-        L1 = Controller1.ButtonL1.pressing();
-        L2 = Controller1.ButtonL2.pressing();
-        R1 = Controller1.ButtonR1.pressing();
-        R2 = Controller1.ButtonR2.pressing();
-        
-        int lv = C3 * 0.85 + C1 * 0.55;
-        int rv = C3 * 0.85 - C1 * 0.55;
-        if(!(R||L||Y||A)){
-            //To disable/enable PID, change the namespace
-           pid::move(lv,rv);
-        }
-        
-        if (R1) {
-           up.shot();
-            
-        } else if (R2) {
-            
-            down.shot();
-            
-        } else {
-            pause.shot();
+  // User control code here, inside the loop
+  //###
+  screen::time.setup();
+  //###
+  // Controller1.Screen.clearScreen();
+  //###
+  
+  while (1) {
 
-        }
-        
-        if (L1) {
-            pid::up.roll();
-        } else if (L2) {
-            pid::down.roll();
-        } else {
-            pid::pause.roll();
-        }
-        
-        //微调----------------------------------------------
-        if (L || R || Y || A) {
-            int microlv =8.5*C3;
-            int microrv =8.5*C2;
-            micromove(microlv, microrv);
-            
-        }
-        //--------------------------------------------------
-        //###
-        robot::time.report();
-        //###
+    wait(20, msec);
+    int C1, C2, C3, C4, X, Y, A, B, U, D, L, R, L1, L2, R1, R2;
+
+    C1 = Controller1.Axis1.position(percent);
+    C2 = Controller1.Axis2.position(percent);
+    C3 = Controller1.Axis3.position(percent);
+    C4 = Controller1.Axis4.position(percent);
+    X = Controller1.ButtonX.pressing();
+    Y = Controller1.ButtonY.pressing();
+    A = Controller1.ButtonA.pressing();
+    B = Controller1.ButtonB.pressing();
+    U = Controller1.ButtonUp.pressing();
+    D = Controller1.ButtonDown.pressing();
+    R = Controller1.ButtonRight.pressing();
+    L = Controller1.ButtonLeft.pressing();
+    L1 = Controller1.ButtonL1.pressing();
+    L2 = Controller1.ButtonL2.pressing();
+    R1 = Controller1.ButtonR1.pressing();
+    R2 = Controller1.ButtonR2.pressing();
+
+    int lv = C3 * 0.85 + C1 * 0.55;
+    int rv = C3 * 0.85 - C1 * 0.55;
+    if (!(R || L || Y || A)) {
+      // To disable/enable PID, change the namespace
+      pid::move(lv,rv);
     }
+
+    if (R1) {
+      shot.up();
+
+    } else if (R2) {
+
+      shot.down();
+
+    } else {
+      shot.pause();
+    }
+
+    if (L1) {
+      up.roll();
+    } else if (L2) {
+      down.roll();
+    } else {
+      pause.roll();
+    }
+
+    //微调----------------------------------------------
+    if (L || R || Y || A) {
+      int microlv = 9 * C3;
+      int microrv = 9 * C2;
+      micromove(microlv, microrv);
+    }
+    //--------------------------------------------------
+    //###
+    // screen::time.report();
+    //###
+  }
 }
 
 //
@@ -170,146 +162,62 @@ void usercontrol(void) {
 //
 int main() {
 
-    static double time_to_choose = Brain.timer(vex::timeUnits::msec);
-    while (1) {
-        if (Brain.timer(vex::timeUnits::msec) - time_to_choose > 175) {
-            if (bumper_.pressing()) {
-                Brain.Screen.clearScreen();
-                choose = choose % 8 + 1;
-                time_to_choose = Brain.timer(vex::timeUnits::msec);
-            }
-           
-        }
-        switch (choose) {
-            case 0:
-                Brain.Screen.printAt(10, 100, "Automatic time period selection");
-                Brain.Screen.printAt(10, 120, "Use the Bumper to select the program");
-                Brain.Screen.printAt(10, 140, "If you stay on this page, it will do nothing.");
-                Brain.Screen.setFont(propM); 
-                Brain.Screen.printAt(100, 55, "<");
-                Brain.Screen.printAt(113, 53, "--------Bumper--------");
-                Brain.Screen.setFont(monoM); 
-                Brain.Screen.drawRectangle(20, 14, 40, 65); 
-                Brain.Screen.setFillColor(red);
-                Brain.Screen.drawRectangle(59, 25, 28, 44); 
-                // Brain.Screen.drawLine(88, 35, 40, 3); 
-                break;
-
-
-            case 1:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(340, 50, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Left 1");
-                Brain.Screen.printAt(10, 80, "Goal in the corner");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            case 2:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(340, 50, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Right 1");
-                Brain.Screen.printAt(10, 80, "Goal in the corner");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            case 3:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(340, 80, 20);
-                Brain.Screen.drawCircle(410, 80, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Left 1 and 2");
-                Brain.Screen.printAt(10, 80, "Corner and side");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            case 4:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(340, 80, 20);
-                Brain.Screen.drawCircle(410, 80, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Right 1 and 2");
-                Brain.Screen.printAt(10, 80, "Corner and side");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-                
-            case 5:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(340, 135, 20);
-                Brain.Screen.drawCircle(410, 80, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Left 1 and 3");
-                Brain.Screen.printAt(10, 80, "Corner and middle of field");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            case 6:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(340, 80, 20);
-                Brain.Screen.drawCircle(410, 135, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Right 1 and 3");
-                Brain.Screen.printAt(10, 80, "Corner and middle of field");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            case 7:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawCircle(260, 80, 20);
-                Brain.Screen.drawCircle(320, 80, 20);
-                Brain.Screen.drawCircle(380, 80, 20);
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Right \"Super!!!\" Must be placed on the right");
-                Brain.Screen.printAt(10, 80, "home alliance");
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            case 8:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.drawRectangle(285, 25, 20, 65); 
-                Brain.Screen.drawRectangle(285, 85, 50, 25); 
-                Brain.Screen.setFillColor(black);
-                Brain.Screen.printAt(10, 40, "Right NO ENEMY!!!(Case 8)");
-                Brain.Screen.printAt(10, 80, "Shape L");
-                Brain.Screen.printAt(5, 130, "This program has been checked by Jiang Ziyang ");
-                Brain.Screen.printAt(5, 150, "and found to be wrong and has been banned");
-
-                // Brain.Screen.printAt(10, 60, "After the code is written, we will tell you how to put the car");
-                break;
-            default:
-                // Brain.Screen.clearScreen();
-                Brain.Screen.printAt(10, 40, "If this text appears, there is a BUG."); 
-                Brain.Screen.setFillColor(red);      
-                Brain.Screen.printAt(10, 60, "Tell the programmer the problem "); 
-                Brain.Screen.printAt(10, 75, "or press the button several times");   
-                Brain.Screen.printAt(10, 95, "Error: the MOD number is wrong");
-                break;
-   
-        }
-        Brain.Screen.printAt(10, 180, "HSEFZCZ, Shanghai");
-        Brain.Screen.setFillColor(black);
-        Brain.Screen.printAt(10, 205, "Team 96331A  ");
-        Brain.Screen.setFillColor(black);
-        Brain.Screen.printAt(10, 222, "3 Generation");
-        
-        
+  static double time_to_choose = Brain.timer(vex::timeUnits::msec);
+  while (1) {
+    if (Brain.timer(vex::timeUnits::msec) - time_to_choose > 175) {
+      if (bumper_.pressing()) {
+        Brain.Screen.clearScreen();
+        choose = choose % 8 + 1;
+        time_to_choose = Brain.timer(vex::timeUnits::msec);
+      }
     }
-    // Set up callbacks for autonomous and driver control periods.
-    Competition.autonomous(autonomous);
-    Competition.drivercontrol(usercontrol);
-    
-    // Run the pre-autonomous function.
-    pre_auton();
-    
-    // Prevent main from exiting with an infinite loop.
-    while (true) {
-        wait(100, msec);
+    switch (choose) {
+    case 0:
+      print::autochoose.start();
+      break;
+    case 1:
+      print::autochoose.Left1();
+      break;
+    case 2:
+      print::autochoose.Right1();
+      break;
+    case 3:
+      print::autochoose.Left1and2();
+      break;
+    case 4:
+      print::autochoose.Right1and2();
+      break;
+    case 5:
+      print::autochoose.Left1and3();
+      break;
+    case 6:
+      print::autochoose.Right1and3();
+      break;
+    case 7:
+      print::autochoose.threeGoals();
+      break;
+    case 8:
+      print::autochoose.shapeL();
+      break;
+    default:
+      print::autochoose.bugReport();
+      break;
     }
+    Brain.Screen.printAt(10, 180, "HSEFZCZ, Shanghai");
+    Brain.Screen.setFillColor(black);
+    Brain.Screen.printAt(10, 205, "VRC");
+    Brain.Screen.setFillColor(black);
+    Brain.Screen.printAt(10, 222, "3 Generation");
+  }
+  // Set up callbacks for autonomous and driver control periods.
+  Competition.autonomous(autonomous);
+  Competition.drivercontrol(usercontrol);
+
+  // Run the pre-autonomous function.
+  pre_auton();
+
+  // Prevent main from exiting with an infinite loop.
+  while (true) {
+    wait(100, msec);
+  }
 }
-
-
-
-
