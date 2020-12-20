@@ -1,2 +1,2 @@
-# VRC 96331A
-Code of team 96331A participating in VRC competition
+# VRC 96331B
+Code of team 96331B participating in VRC competition
